@@ -8,16 +8,24 @@ app = typer.Typer()
 
 @app.command()
 def initdb():
+    """
+    One-off command to create the database and tables.
+    """
     create_db()
     typer.echo("Database created.")
 
 @app.command()
 def check():
-    # check logged in user
+    """
+    Check who is currently logged in.
+    """
     typer.echo(f"Current user:")
 
 @app.command()
 def useradd():
+    """
+    Add a new user.
+    """
     username = typer.prompt("Username")
     passwordx = typer.prompt("Password", hide_input=True)
     passwordy = typer.prompt("Retype password", hide_input=True)
@@ -33,6 +41,9 @@ def useradd():
 
 @app.command()
 def users():
+    """
+    Lists all the users.
+    """
     users_list = check_users()
     for user in users_list:
         typer.echo(user.username)
@@ -44,6 +55,9 @@ def login(
         ..., prompt=True, hide_input=True
     )
 ):
+    """
+    Login as a certain user.
+    """
     try:
         enter_user(username, password)
         typer.echo(f"Logged in.")

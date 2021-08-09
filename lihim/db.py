@@ -12,9 +12,6 @@ def create_db():
     with database:
         database.create_tables([User, Group, Pair])
 
-def checker():
-    return database
-
 def create_user(username: str, password: str) -> None:
     new_user = User(username=username, password=password)
     new_user.save()

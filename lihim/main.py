@@ -1,6 +1,6 @@
 from typing import List
 import typer
-from .db import create_db, checker, create_user, check_users, enter_user, clear_user, allow_user
+from .db import create_db, create_user, check_users, enter_user, clear_user, allow_user, load_session_json
 
 
 app = typer.Typer()
@@ -19,7 +19,8 @@ def check():
     """
     Check who is currently logged in.
     """
-    typer.echo(f"Current user:")
+    user = load_session_json()
+    typer.echo(f"Current user: {user[0]}")
 
 @app.command()
 def useradd(username: str):

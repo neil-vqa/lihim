@@ -70,5 +70,13 @@ def allow_user():
     except Exception as e:
         raise e
 
-    
+def clear_user():
+    auth = {
+        "LIHIM_USER": "",
+        "LIHIM_PASSWORD": ""
+    }
+    auth_dump = json.dumps(auth, indent=2)
+
+    with open("lihim/db/session.json", "w") as f:
+        f.write(auth_dump)
 

@@ -1,6 +1,6 @@
 from typing import List
 import typer
-from .db import create_db, checker, create_user, check_users, enter_user
+from .db import create_db, checker, create_user, check_users, enter_user, clear_user
 
 
 app = typer.Typer()
@@ -63,6 +63,14 @@ def login(
     except Exception as e:
         typer.echo(e)
     
+
+@app.command()
+def logout():
+    """
+    Logout current user.
+    """
+    clear_user()
+    typer.echo(f"Logged out. Bye!")
 
 # @app.command()
 # def groups():

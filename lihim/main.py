@@ -22,11 +22,10 @@ def check():
     typer.echo(f"Current user:")
 
 @app.command()
-def useradd():
+def useradd(username: str):
     """
     Add a new user.
     """
-    username = typer.prompt("Username")
     passwordx = typer.prompt("Password", hide_input=True)
     passwordy = typer.prompt("Retype password", hide_input=True)
 

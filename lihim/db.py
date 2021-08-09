@@ -1,12 +1,19 @@
+import os
 import sqlite3
 import json
-
+from pathlib import Path
 from peewee import EnclosedNodeList
 from .models import database, User, Group, Pair
 
+home = str(Path.home())
+config_path = f"{home}/.config/lihim"
+os.makedirs(config_path, exist_ok = True)
+
+db_path = f"{config_path}/lihimdb.db"
+session_path = f"{config_path}/session.json"
 
 def create_db():
-    conn = sqlite3.connect("lihim/db/lihimdb.db")
+    conn = sqlite3.connect(db_path)
     conn.close()
 
     with database:
@@ -27,7 +34,7 @@ def enter_user(username: str, password: str):
     }
     auth_dump = json.dumps(auth, indent=2)
 
-    with open("lihim/db/session.json", "w") as f:
+    with open(session_path, "w") as f:
         f.write(auth_dump)
 
     try:
@@ -36,7 +43,7 @@ def enter_user(username: str, password: str):
         raise e
 
 def load_session_json():
-    with open("lihim/db/session.json", "r") as f:
+    with open(session_path, "r") as f:
         current_user = json.load(f)
 
     username = current_user['LIHIM_USER']
@@ -74,6 +81,6 @@ def clear_user():
     }
     auth_dump = json.dumps(auth, indent=2)
 
-    with open("lihim/db/session.json", "w") as f:
+    with open(session_path, "w") as f:
         f.write(auth_dump)
 

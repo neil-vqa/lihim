@@ -1,6 +1,9 @@
+import os
 from peewee import SqliteDatabase, Model, CharField, ForeignKeyField
+from pathlib import Path
 
-DATABASE = "lihim/db/lihimdb.db"
+home = str(Path.home())
+DATABASE = f"{home}/.config/lihim/lihimdb.db"
 
 database = SqliteDatabase(DATABASE)
 

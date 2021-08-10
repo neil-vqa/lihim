@@ -101,3 +101,18 @@ def check_groups():
     groups = current_user.groups
     return groups
 
+def create_pair(key: str, value: str, group: str):
+    credentials = load_session_json()
+    current_user = get_user(credentials[0])
+
+    try:
+        group_to_add = Group.get(Group.user==current_user, Group.name==group)
+        new_pair = Pair(
+            key_string=key,
+            value_string=value,
+            group=group_to_add,
+            user=current_user
+        )
+        new_pair.save()
+    except Exception as e:
+        raise e

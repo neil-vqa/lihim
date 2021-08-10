@@ -25,6 +25,7 @@ class Pair(BaseModel):
     key_string = CharField()
     value_string = CharField(max_length=512)
     group = ForeignKeyField(Group, backref='pairs')
+    user = ForeignKeyField(User, backref='pairs')
 
 def create_db():
     conf.create_config()

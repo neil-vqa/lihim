@@ -1,7 +1,7 @@
 from typing import List
 import typer
 from .models import create_db
-from .db import create_user, check_users, enter_user, clear_user, allow_user, load_session_json, create_group, check_groups
+from .db import *
 
 
 app = typer.Typer()
@@ -93,6 +93,18 @@ def groups():
     for group in groups_list:
         typer.echo(group.name)
 
+@app.command()
+def pairadd():
+    key = typer.prompt("Key")
+    value = typer.prompt("Value")
+    group = typer.prompt("Add to what group?")
+
+    try:
+        allow_user()
+        create_pair(key, value, group)
+        typer.echo(f"{key} added.")
+    except Exception as e:
+        typer.echo(e)
 
 if __name__ == "__main__":
     app()

@@ -1,11 +1,12 @@
 import os
+import sqlite3
 from peewee import SqliteDatabase, Model, CharField, ForeignKeyField
-from pathlib import Path
+from .config import ConfigPath
 
-home = str(Path.home())
-DATABASE = f"{home}/.config/lihim/lihimdb.db"
 
-database = SqliteDatabase(DATABASE)
+conf = ConfigPath()
+
+database = SqliteDatabase(conf.db_path)
 
 class BaseModel(Model):
     class Meta:
@@ -24,3 +25,10 @@ class Pair(BaseModel):
     value_string = CharField(max_length=512)
     group = ForeignKeyField(Group, backref='pairs')
 
+def create_db():
+    conf.create_config()
+    conn = sqlite3.connect(conf.db_path)
+    conn.close()
+
+    with database:
+        database.create_tables([User, Group, Pair])

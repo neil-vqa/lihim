@@ -1,10 +1,10 @@
 from typing import List
 import typer
-from .db import create_db, create_user, check_users, enter_user, clear_user, allow_user, load_session_json
+from .models import create_db
+from .db import create_user, check_users, enter_user, clear_user, allow_user, load_session_json
 
 
 app = typer.Typer()
-
 
 @app.command()
 def initdb():

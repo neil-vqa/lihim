@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from peewee import SqliteDatabase, Model, CharField, ForeignKeyField
+from peewee import SqliteDatabase, Model, CharField, ForeignKeyField, BlobField
 from .config import ConfigPath
 
 
@@ -15,6 +15,7 @@ class BaseModel(Model):
 class User(BaseModel):
     username = CharField(unique=True)
     password = CharField()
+    box_key = BlobField()
 
 class Group(BaseModel):
     name = CharField()

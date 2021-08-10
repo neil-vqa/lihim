@@ -1,5 +1,7 @@
 import json
 import nacl.pwhash
+import nacl.secret
+import nacl.utils
 from .config import ConfigPath
 from .models import User, Group, Pair
 
@@ -10,7 +12,15 @@ def create_user(username: str, password: str) -> None:
     password_byte = password.encode('UTF-8')
     hashed_password = nacl.pwhash.str(password_byte)
 
-    new_user = User(username=username, password=hashed_password)
+    key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)
+
+    print(key)
+
+    new_user = User(
+        username=username, 
+        password=hashed_password,
+        box_key=key
+    )
     new_user.save()
 
 def check_users():

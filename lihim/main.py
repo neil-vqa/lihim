@@ -1,7 +1,7 @@
 from typing import List
 import typer
 from .models import create_db
-from .db import create_user, check_users, enter_user, clear_user, allow_user, load_session_json
+from .db import create_user, check_users, enter_user, clear_user, allow_user, load_session_json, create_group
 
 
 app = typer.Typer()
@@ -73,13 +73,14 @@ def logout():
     typer.echo(f"Logged out. Bye!")
 
 @app.command()
-def groupadd():
+def groupadd(name: str):
     """
     Add a new group.
     """
     try:
         allow_user()
-        typer.echo("new group added.")
+        create_group(name)
+        typer.echo(f"{name} group added.")
     except Exception as e:
         typer.echo(e)
 

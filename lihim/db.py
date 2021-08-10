@@ -14,8 +14,6 @@ def create_user(username: str, password: str) -> None:
 
     key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)
 
-    print(key)
-
     new_user = User(
         username=username, 
         password=hashed_password,
@@ -87,3 +85,12 @@ def clear_user():
     with open(conf.session_path, "w") as f:
         f.write(auth_dump)
 
+def create_group(name: str):
+    credentials = load_session_json()
+    current_user = get_user(credentials[0])
+
+    new_group = Group(
+        name=name,
+        user=current_user
+    )
+    new_group.save()

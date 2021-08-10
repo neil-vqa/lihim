@@ -1,7 +1,7 @@
 from typing import List
 import typer
 from .models import create_db
-from .db import create_user, check_users, enter_user, clear_user, allow_user, load_session_json, create_group
+from .db import create_user, check_users, enter_user, clear_user, allow_user, load_session_json, create_group, check_groups
 
 
 app = typer.Typer()
@@ -83,6 +83,15 @@ def groupadd(name: str):
         typer.echo(f"{name} group added.")
     except Exception as e:
         typer.echo(e)
+
+@app.command()
+def groups():
+    """
+    Lists groups of current user.
+    """
+    groups_list = check_groups()
+    for group in groups_list:
+        typer.echo(group.name)
 
 
 if __name__ == "__main__":

@@ -94,3 +94,10 @@ def create_group(name: str):
         user=current_user
     )
     new_group.save()
+
+def check_groups():
+    credentials = load_session_json()
+    current_user = get_user(credentials[0])
+    groups = current_user.groups
+    return groups
+

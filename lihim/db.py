@@ -101,6 +101,12 @@ def check_groups():
     groups = current_user.groups
     return groups
 
+def check_group_pairs(name: str):
+    credentials = load_session_json()
+    current_user = get_user(credentials[0])
+    group = Group.get(Group.user==current_user, Group.name==name)
+    return group.pairs
+
 def create_pair(key: str, value: str, group: str):
     credentials = load_session_json()
     current_user = get_user(credentials[0])

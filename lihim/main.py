@@ -94,6 +94,15 @@ def groups():
         typer.echo(group.name)
 
 @app.command()
+def group(name: str):
+    """
+    Lists all the keys of the group.
+    """
+    pairs_list = check_group_pairs(name)
+    for pair in pairs_list:
+        typer.echo(pair.key_string)
+
+@app.command()
 def pairadd():
     """
     Add a new key-value pair.

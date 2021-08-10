@@ -87,7 +87,7 @@ def groupadd(name: str):
 @app.command()
 def groups():
     """
-    Lists groups of current user.
+    Lists all the groups of current user.
     """
     groups_list = check_groups()
     for group in groups_list:
@@ -95,6 +95,9 @@ def groups():
 
 @app.command()
 def pairadd():
+    """
+    Add a new key-value pair.
+    """
     key = typer.prompt("Key")
     value = typer.prompt("Value")
     group = typer.prompt("Add to what group?")
@@ -105,6 +108,22 @@ def pairadd():
         typer.echo(f"{key} added.")
     except Exception as e:
         typer.echo(e)
+
+@app.command()
+def pairs():
+    """
+    Lists all the keys of available pairs of current user.
+    """
+    pairs_list = check_pairs()
+    for pair in pairs_list:
+        typer.echo(pair.key_string)
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     app()

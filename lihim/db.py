@@ -116,3 +116,9 @@ def create_pair(key: str, value: str, group: str):
         new_pair.save()
     except Exception as e:
         raise e
+
+def check_pairs():
+    credentials = load_session_json()
+    current_user = get_user(credentials[0])
+    pairs = current_user.pairs
+    return pairs

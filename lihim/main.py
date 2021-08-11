@@ -136,8 +136,31 @@ def pair(key: str):
     for pair in key_val_list:
         typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
 
+@app.command()
+def groupdel(name: str):
+    pass
 
-
+@app.command()
+def pairdel(
+    key: str, 
+    group: str, 
+    confirm: bool = typer.Option(
+        ...,
+        prompt="Are you sure you want to delete this key-val pair?"
+    )
+):
+    """
+    'pairdel [key] [group name]' -> Delete specified key.
+    """
+    if confirm:
+        try:
+            pair = load_pair_in_group(group, key)
+            response = delete_pair(pair)
+            typer.echo("Key-value pair deleted.")
+        except Exception as e:
+            typer.echo(e)
+    else:
+        typer.echo("Cancelled.")
 
 
 

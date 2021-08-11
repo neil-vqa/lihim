@@ -137,8 +137,24 @@ def pair(key: str):
         typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
 
 @app.command()
-def groupdel(name: str):
-    pass
+def groupdel(
+    name: str,
+    confirm: bool = typer.Option(
+        ...,
+        prompt="DANGER: Are you sure you want to delete this group? (Pairs within this group will also be deleted.)"
+    )
+):
+    """
+    'groupdel [group name]' -> Delete group.
+    """
+    if confirm:
+        try:
+            response = delete_group(name)
+            typer.echo("Group deleted.")
+        except Exception as e:
+            typer.echo(e)
+    else:
+        typer.echo("Cancelled.")
 
 @app.command()
 def pairdel(
@@ -146,7 +162,7 @@ def pairdel(
     group: str, 
     confirm: bool = typer.Option(
         ...,
-        prompt="Are you sure you want to delete this key-val pair?"
+        prompt="DANGER: Are you sure you want to delete this key-val pair?"
     )
 ):
     """

@@ -153,6 +153,14 @@ def delete_group(name: str):
     credentials = load_session_json()
     current_user = get_user(credentials[0])
 
+    try:
+        group = Group.get(Group.user==current_user, Group.name==name)
+        group.delete_instance(recursive=True)
+    except Group.DoesNotExist:
+        raise ValueError("Group does not exist.")
+    except Exception as e:
+        raise e
+
 def delete_pair(pair: Pair):
     try:
         pair.delete_instance()

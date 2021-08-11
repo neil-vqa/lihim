@@ -25,7 +25,7 @@ def check():
 @app.command()
 def useradd(username: str):
     """
-    'useradd [username]' - Add a new user.
+    'useradd [username]' -> Add a new user.
     """
     passwordx = typer.prompt("Password", hide_input=True)
     passwordy = typer.prompt("Retype password", hide_input=True)
@@ -56,7 +56,7 @@ def login(
     )
 ):
     """
-    'login [username]' - Login as a certain user.
+    'login [username]' -> Login as a certain user.
     """
     try:
         enter_user(username, password)
@@ -75,7 +75,7 @@ def logout():
 @app.command()
 def groupadd(name: str):
     """
-    'groupadd [group name]' - Add a new group.
+    'groupadd [group name]' -> Add a new group.
     """
     try:
         allow_user()
@@ -96,7 +96,7 @@ def groups():
 @app.command()
 def group(name: str):
     """
-    'group [group name]' - Lists all the keys of the group.
+    'group [group name]' -> Lists all the keys of the group.
     """
     pairs_list = check_group_pairs(name)
     for pair in pairs_list:
@@ -130,7 +130,7 @@ def pairs():
 @app.command()
 def pair(key: str):
     """
-    Display the key-value pair.
+    'pair [key]' -> Display the key-value pair.
     """
     key_val_list = check_key_value(key)
     for pair in key_val_list:

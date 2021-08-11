@@ -8,6 +8,10 @@ from .models import User, Group, Pair
 
 conf = ConfigPath()
 
+"""
+CLI commands associated with users use these functions.
+"""
+
 def create_user(username: str, password: str) -> None:
     password_byte = password.encode('UTF-8')
     hashed_password = nacl.pwhash.str(password_byte)
@@ -24,8 +28,15 @@ def create_user(username: str, password: str) -> None:
 def check_users():
     users = User.select()
     return users
+
+"""
+Functions associated with managing the session.
+"""
     
 def enter_user(username: str, password: str):
+    """
+    Writes the entered username and password to session.json when logging in.
+    """
     auth = {
         "LIHIM_USER": username,
         "LIHIM_PASSWORD": password
@@ -50,6 +61,9 @@ def load_session_json():
     return username, password
 
 def get_user(username):
+    """
+    Gets the User instance for current_user variable.
+    """
     try:
         user = User.get(User.username==username)
         return user
@@ -57,6 +71,10 @@ def get_user(username):
         raise ValueError("User does not exist.")
 
 def check_password(current_user, password):
+    """
+    Verifies the password in session.json against
+    the hashed password in the database.
+    """
     correct = current_user.password.encode('UTF-8')
     entered = password.encode('UTF-8')
 
@@ -66,6 +84,9 @@ def check_password(current_user, password):
         raise e
 
 def allow_user():
+    """
+    Verifies username and password during login.
+    """
     username, password = load_session_json()
 
     try:
@@ -76,6 +97,9 @@ def allow_user():
         raise e
 
 def clear_user():
+    """
+    Clears username and password in session.json.
+    """
     auth = {
         "LIHIM_USER": "",
         "LIHIM_PASSWORD": ""
@@ -84,6 +108,12 @@ def clear_user():
 
     with open(conf.session_path, "w") as f:
         f.write(auth_dump)
+
+
+""" 
+CLI commands associated with groups and pairs
+use these functions.
+"""
 
 def create_group(name: str):
     credentials = load_session_json()
@@ -104,6 +134,7 @@ def check_groups():
 def check_group_pairs(name: str):
     credentials = load_session_json()
     current_user = get_user(credentials[0])
+
     try:
         group = Group.get(Group.user==current_user, Group.name==name)
         return group.pairs

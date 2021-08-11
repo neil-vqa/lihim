@@ -4,7 +4,7 @@
 ## Overview
 **Lihim** (Filipino word for *secret*) uses PyNaCl for secret key encryption, and stores the key-value pairs in an SQLite/PostgreSQL database. Secret keys are managed according to users and groups. That is, each user has groups and these groups can contain several key-value pairs.
 
-![lihim-structure](https://res.cloudinary.com/nvqacloud/image/upload/v1628686115/lihim_structure_rlephq.png)
+![lihim-chart](https://res.cloudinary.com/nvqacloud/image/upload/v1628687064/lihim_chart_ed77lw.png)
 
 ## License
 MIT License

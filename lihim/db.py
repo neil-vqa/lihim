@@ -128,3 +128,11 @@ def check_pairs():
     current_user = get_user(credentials[0])
     pairs = current_user.pairs
     return pairs
+
+def check_key_value(key: str):
+    credentials = load_session_json()
+    current_user = get_user(credentials[0])
+    pairs = current_user.pairs
+    key_val = [(pair.key_string, pair.value_string, pair.group.name) for pair in pairs if pair.key_string == key]
+    return key_val
+    

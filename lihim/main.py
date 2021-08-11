@@ -127,7 +127,14 @@ def pairs():
     for pair in pairs_list:
         typer.echo(pair.key_string)
 
-
+@app.command()
+def pair(key: str):
+    """
+    Display the key-value pair.
+    """
+    key_val_list = check_key_value(key)
+    for pair in key_val_list:
+        typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
 
 
 

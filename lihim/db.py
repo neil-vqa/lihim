@@ -104,8 +104,11 @@ def check_groups():
 def check_group_pairs(name: str):
     credentials = load_session_json()
     current_user = get_user(credentials[0])
-    group = Group.get(Group.user==current_user, Group.name==name)
-    return group.pairs
+    try:
+        group = Group.get(Group.user==current_user, Group.name==name)
+        return group.pairs
+    except Group.DoesNotExist:
+        raise ValueError("Group does not exist.")
 
 def create_pair(key: str, value: str, group: str):
     credentials = load_session_json()

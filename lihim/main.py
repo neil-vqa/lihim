@@ -98,9 +98,12 @@ def group(name: str):
     """
     'group [group name]' -> Lists all the keys of the group.
     """
-    pairs_list = check_group_pairs(name)
-    for pair in pairs_list:
-        typer.echo(pair.key_string)
+    try:
+        pairs_list = check_group_pairs(name)
+        for pair in pairs_list:
+            typer.echo(pair.key_string)
+    except Exception as e:
+        typer.echo(e)
 
 @app.command()
 def pairadd():

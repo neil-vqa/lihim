@@ -1,7 +1,7 @@
 from typing import List
 import typer
 from .models import create_db
-from .db import *
+from .controller import *
 
 
 app = typer.Typer()

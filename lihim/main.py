@@ -172,7 +172,9 @@ def groupdel(
     """
     if confirm:
         try:
-            response = delete_group(name)
+            response = allow_user()
+            current_user = response[1]
+            del_response = delete_group(name, current_user)
             typer.echo("Group deleted.")
         except Exception as e:
             typer.echo(e)
@@ -193,8 +195,10 @@ def pairdel(
     """
     if confirm:
         try:
-            pair = load_pair_in_group(group, key)
-            response = delete_pair(pair)
+            response = allow_user()
+            current_user = response[1]
+            pair = load_pair_in_group(group, key, current_user)
+            del_response = delete_pair(pair, current_user)
             typer.echo("Key-value pair deleted.")
         except Exception as e:
             typer.echo(e)

@@ -155,10 +155,7 @@ def check_key_value(key: str, current_user: User):
     key_val = [(pair.key_string, pair.value_string, pair.group.name) for pair in pairs if pair.key_string == key]
     return key_val
     
-def load_pair_in_group(group_name: str, key: str):
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
-
+def load_pair_in_group(group_name: str, key: str, current_user: User):
     try:
         pair_in_group = Group.get(Group.user==current_user, Group.name==group_name)
         pair = Pair.get(Pair.user==current_user, Pair.group==pair_in_group, Pair.key_string==key)
@@ -168,10 +165,7 @@ def load_pair_in_group(group_name: str, key: str):
     except Pair.DoesNotExist:
         raise ValueError("Pair does not exist.")
 
-def delete_group(name: str):
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
-
+def delete_group(name: str, current_user: User):
     try:
         group = Group.get(Group.user==current_user, Group.name==name)
         group.delete_instance(recursive=True)
@@ -180,7 +174,7 @@ def delete_group(name: str):
     except Exception as e:
         raise e
 
-def delete_pair(pair: Pair):
+def delete_pair(pair: Pair, current_user: User):
     try:
         pair.delete_instance()
     except Exception as e:

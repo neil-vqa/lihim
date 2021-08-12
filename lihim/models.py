@@ -17,7 +17,6 @@ class BaseModel(Model):
 class User(BaseModel):
     username = CharField(unique=True)
     password = CharField()
-    key_file = BlobField()
 
 class Group(BaseModel):
     name = CharField()

@@ -85,7 +85,7 @@ def check_password(current_user, password):
 
 def allow_user():
     """
-    Verifies username and password during login.
+    Check if authenticated.
     """
     username, password = load_session_json()
 

@@ -133,10 +133,7 @@ def check_group_pairs(name: str, current_user: User):
     except Group.DoesNotExist:
         raise ValueError("Group does not exist.")
 
-def create_pair(key: str, value: str, group: str):
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
-
+def create_pair(key: str, value: str, group: str, current_user: User):
     try:
         group_to_add = Group.get(Group.user==current_user, Group.name==group)
         new_pair = Pair(
@@ -149,15 +146,11 @@ def create_pair(key: str, value: str, group: str):
     except Exception as e:
         raise e
 
-def check_pairs():
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
+def check_pairs(current_user: User):
     pairs = current_user.pairs
     return pairs
 
-def check_key_value(key: str):
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
+def check_key_value(key: str, current_user: User):
     pairs = current_user.pairs
     key_val = [(pair.key_string, pair.value_string, pair.group.name) for pair in pairs if pair.key_string == key]
     return key_val

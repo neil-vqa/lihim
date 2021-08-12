@@ -124,8 +124,9 @@ def pairadd():
     group = typer.prompt("Add to what group?")
 
     try:
-        allow_user()
-        create_pair(key, value, group)
+        response = allow_user()
+        current_user = response[1]
+        create_pair(key, value, group, current_user)
         typer.echo(f"{key} added.")
     except Exception as e:
         typer.echo(e)
@@ -135,18 +136,28 @@ def pairs():
     """
     Lists all the keys of available pairs of current user.
     """
-    pairs_list = check_pairs()
-    for pair in pairs_list:
-        typer.echo(pair.key_string)
+    try:
+        response = allow_user()
+        current_user = response[1]
+        pairs_list = check_pairs(current_user)
+        for pair in pairs_list:
+            typer.echo(pair.key_string)
+    except Exception as e:
+        typer.echo(e)
 
 @app.command()
 def pair(key: str):
     """
     'pair [key]' -> Display the key-value pair.
     """
-    key_val_list = check_key_value(key)
-    for pair in key_val_list:
-        typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
+    try:
+        response = allow_user()
+        current_user = response[1]
+        key_val_list = check_key_value(key, current_user)
+        for pair in key_val_list:
+            typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
+    except Exception as e:
+        typer.echo(e)
 
 @app.command()
 def groupdel(

@@ -1,6 +1,8 @@
 from typing import List
+import typing
+from click.termui import prompt
 import typer
-from .models import create_db
+from .models import create_db, create_key
 from .controller import *
 
 
@@ -19,8 +21,11 @@ def check():
     """
     Check who is currently logged in.
     """
-    user = load_session_json()
-    typer.echo(f"Current user: {user[0]}")
+    try:
+        user = load_session_json()
+        typer.echo(f"Current user: {user[0]}")
+    except:
+        typer.echo("Please login.")
 
 @app.command()
 def useradd(username: str):
@@ -29,13 +34,17 @@ def useradd(username: str):
     """
     passwordx = typer.prompt("Password", hide_input=True)
     passwordy = typer.prompt("Retype password", hide_input=True)
+    key_path = typer.prompt(
+        f"IMPORTANT: Provide a path that will contain your key. Use absolute paths (e.g. /home/{username}/.config)"
+    )
 
     if passwordx == passwordy:
         try:
-            create_user(username, passwordx)
+            key = create_key(key_path, username)
+            create_user(username, passwordx, key)
             typer.echo(f"User {username} created.")
         except Exception as e:
-            typer.echo(f"User {username} already exists.")
+            typer.echo(e)
     else:
         typer.echo("Password did not match. Please try again.")
 
@@ -53,13 +62,16 @@ def login(
     username: str, 
     password: str = typer.Option(
         ..., prompt=True, hide_input=True
+    ),
+    key_path: str = typer.Option(
+        ..., prompt=True
     )
 ):
     """
     'login [username]' -> Login as a certain user.
     """
     try:
-        enter_user(username, password)
+        enter_user(username, password, key_path)
         typer.echo(f"Logged in.")
     except Exception as e:
         typer.echo(e)

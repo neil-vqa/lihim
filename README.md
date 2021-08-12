@@ -1,5 +1,5 @@
 # lihim
-**(WIP)** CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified with added security and complexity."*
+**(WIP)** CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified with added security and complexity for listing key-value pairs."*
 
 ## Overview
 **Lihim** (Filipino word for *secret*) uses PyNaCl for secret key encryption, and stores the key-value pairs in an SQLite/PostgreSQL database. Secret keys are managed according to users and groups. That is, each user has groups and these groups can contain several key-value pairs.

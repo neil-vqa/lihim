@@ -2,6 +2,7 @@ import json
 import nacl.pwhash
 import nacl.secret
 import nacl.utils
+from typing import Optional
 from .config import ConfigPath
 from .models import User, Group, Pair
 
@@ -12,16 +13,27 @@ conf = ConfigPath()
 CLI commands associated with users use these functions.
 """
 
-def create_user(username: str, password: str) -> None:
+def use_key(key: str, encrypt_text: Optional[str] = None, decrypt_text: Optional[bytes] = None):
+    with open(key, "rb") as f:
+        key_bin = f.read()
+        box = nacl.secret.SecretBox(key_bin)
+    
+    if encrypt_text:
+        encoded_text = encrypt_text.encode('UTF-8')
+        encrypted_text = box.encrypt(encoded_text)
+        return encrypted_text
+    elif decrypt_text:
+        plaintext = box.decrypt(decrypt_text)
+        decoded_text = plaintext.decode('UTF-8')
+        return decoded_text
+
+def create_user(username: str, password: str, key: str) -> None:
     password_byte = password.encode('UTF-8')
     hashed_password = nacl.pwhash.str(password_byte)
 
-    key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)
-
     new_user = User(
         username=username, 
-        password=hashed_password,
-        box_key=key
+        password=hashed_password
     )
     new_user.save()
 
@@ -33,13 +45,16 @@ def check_users():
 Functions associated with managing the session.
 """
     
-def enter_user(username: str, password: str):
+def enter_user(username: str, password: str, key_path: str):
     """
     Writes the entered username and password to session.json when logging in.
     """
+    key = f"{key_path}/lihimkey_{username}"
+
     auth = {
         "LIHIM_USER": username,
-        "LIHIM_PASSWORD": password
+        "LIHIM_PASSWORD": password,
+        "LIHIM_KEY": key
     }
     auth_dump = json.dumps(auth, indent=2)
 
@@ -102,7 +117,8 @@ def clear_user():
     """
     auth = {
         "LIHIM_USER": "",
-        "LIHIM_PASSWORD": ""
+        "LIHIM_PASSWORD": "",
+        "LIHIM_KEY": ""
     }
     auth_dump = json.dumps(auth, indent=2)
 

@@ -2,6 +2,7 @@ import json
 import nacl.pwhash
 import nacl.secret
 import nacl.utils
+from typing import Union
 from .config import ConfigPath
 from .models import User, Group, Pair
 
@@ -12,16 +13,30 @@ conf = ConfigPath()
 CLI commands associated with users use these functions.
 """
 
-def create_user(username: str, password: str) -> None:
+def use_key(key: str, text: Union[str, bytes], encrypt: bool = True):
+    with open(key, "rb") as f:
+        key_bin = f.read()
+        box = nacl.secret.SecretBox(key_bin)
+    
+    if encrypt:
+        encoded_text = text.encode('UTF-8')
+        encrypted_text = box.encrypt(encoded_text)
+        return encrypted_text
+    else:
+        plaintext = box.decrypt(text)
+        decoded_text = plaintext.decode('utf-8')
+        return decoded_text
+
+def create_user(username: str, password: str, key: str) -> None:
     password_byte = password.encode('UTF-8')
     hashed_password = nacl.pwhash.str(password_byte)
 
-    key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)
+    key_file = use_key(key, key)
 
     new_user = User(
         username=username, 
         password=hashed_password,
-        box_key=key
+        key_file=key_file
     )
     new_user.save()
 

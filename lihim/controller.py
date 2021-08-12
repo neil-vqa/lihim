@@ -68,7 +68,7 @@ def get_user(username):
         user = User.get(User.username==username)
         return user
     except:
-        raise ValueError("User does not exist.")
+        raise ValueError("User does not exist. Unauthenticated.")
 
 def check_password(current_user, password):
     """
@@ -92,7 +92,7 @@ def allow_user():
     try:
         current_user = get_user(username)
         check_password(current_user, password)
-        return True
+        return (True, current_user)
     except Exception as e:
         raise e
 
@@ -115,26 +115,18 @@ CLI commands associated with groups and pairs
 use these functions.
 """
 
-def create_group(name: str):
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
-
+def create_group(name: str, current_user: User):
     new_group = Group(
         name=name,
         user=current_user
     )
     new_group.save()
 
-def check_groups():
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
+def check_groups(current_user: User):
     groups = current_user.groups
     return groups
 
-def check_group_pairs(name: str):
-    credentials = load_session_json()
-    current_user = get_user(credentials[0])
-
+def check_group_pairs(name: str, current_user: User):
     try:
         group = Group.get(Group.user==current_user, Group.name==name)
         return group.pairs

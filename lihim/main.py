@@ -78,8 +78,9 @@ def groupadd(name: str):
     'groupadd [group name]' -> Add a new group.
     """
     try:
-        allow_user()
-        create_group(name)
+        response = allow_user()
+        current_user = response[1]
+        create_group(name, current_user)
         typer.echo(f"{name} group added.")
     except Exception as e:
         typer.echo(e)
@@ -89,9 +90,15 @@ def groups():
     """
     Lists all the groups of current user.
     """
-    groups_list = check_groups()
-    for group in groups_list:
-        typer.echo(group.name)
+    try:
+        response = allow_user()
+        current_user = response[1]
+        groups_list = check_groups(current_user)
+        for group in groups_list:
+            typer.echo(group.name)
+    except Exception as e:
+        typer.echo(e)
+
 
 @app.command()
 def group(name: str):
@@ -99,7 +106,9 @@ def group(name: str):
     'group [group name]' -> Lists all the keys of the group.
     """
     try:
-        pairs_list = check_group_pairs(name)
+        response = allow_user()
+        current_user = response[1]
+        pairs_list = check_group_pairs(name, current_user)
         for pair in pairs_list:
             typer.echo(pair.key_string)
     except Exception as e:

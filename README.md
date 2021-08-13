@@ -1,10 +1,44 @@
 # lihim
-**(WIP)** CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified with added security and complexity for listing key-value pairs."*
+**(WIP)** CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
+
 
 ## Overview
-**Lihim** (Filipino word for *secret*) uses PyNaCl for secret key encryption, and stores the key-value pairs in an SQLite/PostgreSQL database. Secret keys are managed according to users and groups. That is, each user has groups and these groups can contain several key-value pairs.
+**Lihim** (Filipino word for *secret*) uses PyNaCl for secret key encryption, and stores the key-value pairs in an SQLite (PostgreSQL coming soon) database. Secret keys are managed according to users and groups. That is, each user has groups and these groups can contain several key-value pairs.
 
 ![lihim-chart](https://res.cloudinary.com/nvqacloud/image/upload/v1628687874/lihim_chart_nwir6s.png)
+
+
+## Installation
+**Coming soon to PyPI**
+
+
+## Get Started
+1. Run `lihim initdb` to create the database and tables,
+2. Next, `lihim useradd [username]` to add your first user.
+3. Then, `lihim login [username]` to login.
+4. Before you can add key-value pairs, you need a group. Run `lihim groupadd [group name]` to create a group.
+5. Now you can add a pair. `lihim pairadd` command will prompt interactively for key, value, and group.
+6. You just added your first key-val pair! Refer to [Commands](#commands) section below for more commands.
+
+
+## Commands
+| Command  | Description |
+| ------------- | ------------- |
+| `initdb` | One-off command to create the database and tables. |
+| `users` | Check registered users. |
+| `useradd [username]` | Create a new user with username of ____. |
+| `login [username]` | Login as user with username of ____. |
+| `logout` | Logout current user. |
+| `check` | Check who is currently logged in. |
+| `groups` | Display all the groups of current user. |
+| `group [group name]` | Display all the key-value pairs of the group. |
+| `groupadd [group name]` | Add new group with name of ____. |
+| `groupdel [group name]` | Delete group with name of ____ |
+| `pairs` | Display all the keys of available pairs of the current user. |
+| `pair [key]` | Display the key-value pair with key of ____. |
+| `pairadd` | Add a new key-value pair. Will prompt interactively for key, value, and group. |
+| `pairdel [key] [group name]` | Delete pair with key ____ and within group ____. |
+
 
 ## License
 MIT License

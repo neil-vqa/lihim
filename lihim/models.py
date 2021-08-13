@@ -24,7 +24,7 @@ class Group(BaseModel):
 
 class Pair(BaseModel):
     key_string = CharField()
-    value_string = CharField(max_length=512)
+    value_string = BlobField()
     group = ForeignKeyField(Group, backref='pairs')
     user = ForeignKeyField(User, backref='pairs')
 

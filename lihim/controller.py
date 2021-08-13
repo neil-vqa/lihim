@@ -27,15 +27,28 @@ def use_key(key: str, encrypt_text: Optional[str] = None, decrypt_text: Optional
         decoded_text = plaintext.decode('UTF-8')
         return decoded_text
 
+def load_key():
+    try:
+        with open(conf.session_path, "r") as f:
+            current_user = json.load(f)
+
+        key_file = current_user['LIHIM_KEY']
+        return key_file
+    except Exception as e:
+        raise e
+
 def create_user(username: str, password: str, key: str) -> None:
     password_byte = password.encode('UTF-8')
     hashed_password = nacl.pwhash.str(password_byte)
 
-    new_user = User(
-        username=username, 
-        password=hashed_password
-    )
-    new_user.save()
+    try:
+        new_user = User(
+            username=username, 
+            password=hashed_password
+        )
+        new_user.save()
+    except Exception as e:
+        raise e
 
 def check_users():
     users = User.select()
@@ -67,13 +80,16 @@ def enter_user(username: str, password: str, key_path: str):
         raise e
 
 def load_session_json():
-    with open(conf.session_path, "r") as f:
-        current_user = json.load(f)
+    try:
+        with open(conf.session_path, "r") as f:
+            current_user = json.load(f)
 
-    username = current_user['LIHIM_USER']
-    password = current_user['LIHIM_PASSWORD']
+        username = current_user['LIHIM_USER']
+        password = current_user['LIHIM_PASSWORD']
 
-    return username, password
+        return username, password
+    except Exception as e:
+        raise e
 
 def get_user(username):
     """
@@ -102,9 +118,8 @@ def allow_user():
     """
     Check if authenticated.
     """
-    username, password = load_session_json()
-
     try:
+        username, password = load_session_json()
         current_user = get_user(username)
         check_password(current_user, password)
         return (True, current_user)
@@ -132,11 +147,14 @@ use these functions.
 """
 
 def create_group(name: str, current_user: User):
-    new_group = Group(
-        name=name,
-        user=current_user
-    )
-    new_group.save()
+    try:
+        new_group = Group(
+            name=name,
+            user=current_user
+        )
+        new_group.save()
+    except Exception as e:
+        raise e
 
 def check_groups(current_user: User):
     groups = current_user.groups
@@ -152,9 +170,11 @@ def check_group_pairs(name: str, current_user: User):
 def create_pair(key: str, value: str, group: str, current_user: User):
     try:
         group_to_add = Group.get(Group.user==current_user, Group.name==group)
+        key_file = load_key()
+        encrypted_value = use_key(key_file, encrypt_text=value)
         new_pair = Pair(
             key_string=key,
-            value_string=value,
+            value_string=encrypted_value,
             group=group_to_add,
             user=current_user
         )
@@ -167,8 +187,9 @@ def check_pairs(current_user: User):
     return pairs
 
 def check_key_value(key: str, current_user: User):
+    key_file = load_key()
     pairs = current_user.pairs
-    key_val = [(pair.key_string, pair.value_string, pair.group.name) for pair in pairs if pair.key_string == key]
+    key_val = [(pair.key_string, use_key(key_file, decrypt_text=pair.value_string), pair.group.name) for pair in pairs if pair.key_string == key]
     return key_val
     
 def load_pair_in_group(group_name: str, key: str, current_user: User):

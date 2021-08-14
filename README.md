@@ -3,7 +3,7 @@
 
 
 ## Overview
-**Lihim** (Filipino word for *secret*) uses PyNaCl for secret key encryption, and stores the key-value pairs in an SQLite (PostgreSQL coming soon) database. Secret keys are managed according to users and groups. That is, each user has groups and these groups can contain several key-value pairs.
+**Lihim** (Filipino word for *secret*) uses PyNaCl's `SecretBox` for secret key encryption, and stores the key-value pairs in an SQLite (PostgreSQL coming soon) database. Secret keys are managed according to users and groups. That is, each user has groups and these groups can contain several key-value pairs.
 
 ![lihim-chart](https://res.cloudinary.com/nvqacloud/image/upload/v1628687874/lihim_chart_nwir6s.png)
 
@@ -38,6 +38,17 @@
 | `pair [key]` | Display the key-value pair with key of ____. |
 | `pairadd` | Add a new key-value pair. Will prompt interactively for key, value, and group. |
 | `pairdel [key] [group name]` | Delete pair with key ____ and within group ____. |
+
+
+## Notes
+### Re: User's "key"
+As per [PyNaCl's documentation](https://pynacl.readthedocs.io/en/latest/secret/#requirements):
+
+> The 32 bytes key given to `SecretBox` must be kept secret. It is the combination to your “safe” and anyone with this key will be able to decrypt the data, or encrypt new data.
+
+In lihim, this "key" is generated when *creating* a new user. The key's path (where to put it) and name (unique, only you knows) are all up to the user. When creating a user by `useradd [username]`, there will be prompts asking where and what to name the key. This is only for generating the key and the user **can (absolutely) rename and/or move** the key elsewhere anytime. The key's path and name are not stored in the database.
+
+When logging in, there will be prompts asking where your key is and what is its name. This happens every `login [username]`. You must give the current key path and key name if you ever moved and/or renamed the key.
 
 
 ## License

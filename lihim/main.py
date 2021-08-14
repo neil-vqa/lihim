@@ -37,10 +37,13 @@ def useradd(username: str):
     key_path = typer.prompt(
         f"IMPORTANT: Provide a path that will contain your key. Use absolute paths (e.g. /home/{username}/.config)"
     )
+    key_name = typer.prompt(
+        f"IMPORTANT: Give your key a unique name (something you'll remember but hard for others to search for)"
+    )
 
     if passwordx == passwordy:
         try:
-            key = create_key(key_path, username)
+            key = create_key(key_path, key_name, username)
             create_user(username, passwordx, key)
             typer.echo(f"User {username} created.")
         except Exception as e:
@@ -65,13 +68,16 @@ def login(
     ),
     key_path: str = typer.Option(
         ..., prompt=True
+    ),
+    key_name: str = typer.Option(
+        ..., prompt=True
     )
 ):
     """
     'login [username]' -> Login as a certain user.
     """
     try:
-        enter_user(username, password, key_path)
+        enter_user(username, password, key_path, key_name)
         typer.echo(f"Logged in.")
     except Exception as e:
         typer.echo(e)

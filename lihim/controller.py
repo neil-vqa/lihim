@@ -2,9 +2,12 @@ import json
 import nacl.pwhash
 import nacl.secret
 import nacl.utils
+import errno
+import os
 from typing import Optional
 from .config import ConfigPath
 from .models import User, Group, Pair
+from pathlib import Path
 
 
 conf = ConfigPath()
@@ -36,6 +39,15 @@ def load_key():
         return key_file
     except Exception as e:
         raise e
+    
+def check_key_exists(key):
+    try:
+        key_file = Path(key)
+        if not key_file.exists():
+            clear_user()
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), "Key not found.")
+    except Exception as e:
+        raise e
 
 def create_user(username: str, password: str, key: str) -> None:
     password_byte = password.encode('UTF-8')
@@ -58,11 +70,11 @@ def check_users():
 Functions associated with managing the session.
 """
     
-def enter_user(username: str, password: str, key_path: str):
+def enter_user(username: str, password: str, key_path: str, key_name: str):
     """
     Writes the entered username and password to session.json when logging in.
     """
-    key = f"{key_path}/lihimkey_{username}"
+    key = f"{key_path}/{key_name}"
 
     auth = {
         "LIHIM_USER": username,
@@ -76,6 +88,7 @@ def enter_user(username: str, password: str, key_path: str):
 
     try:
         allow_user()
+        check_key_exists(key)
     except Exception as e:
         raise e
 

@@ -2,9 +2,12 @@ import json
 import nacl.pwhash
 import nacl.secret
 import nacl.utils
+import errno
+import os
 from typing import Optional
 from .config import ConfigPath
 from .models import User, Group, Pair
+from pathlib import Path
 
 
 conf = ConfigPath()
@@ -34,6 +37,15 @@ def load_key():
 
         key_file = current_user['LIHIM_KEY']
         return key_file
+    except Exception as e:
+        raise e
+    
+def check_key_exists(key):
+    try:
+        key_file = Path(key)
+        if not key_file.exists():
+            clear_user()
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), "Key not found.")
     except Exception as e:
         raise e
 
@@ -76,6 +88,7 @@ def enter_user(username: str, password: str, key_path: str):
 
     try:
         allow_user()
+        check_key_exists(key)
     except Exception as e:
         raise e
 

@@ -45,11 +45,11 @@ def check_user_exists(username: str):
     except Exception as e:
         raise e
 
-def create_key(key_path: str, username: str):
+def create_key(key_path: str, key_name: str, username: str):
     try:
         check = check_user_exists(username)
         if check == False:
-            key_file = f"{key_path}/lihimkey_{username}"
+            key_file = f"{key_path}/{key_name}"
 
             with open(key_file, "wb") as f:
                 key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)

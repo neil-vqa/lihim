@@ -70,11 +70,11 @@ def check_users():
 Functions associated with managing the session.
 """
     
-def enter_user(username: str, password: str, key_path: str):
+def enter_user(username: str, password: str, key_path: str, key_name: str):
     """
     Writes the entered username and password to session.json when logging in.
     """
-    key = f"{key_path}/lihimkey_{username}"
+    key = f"{key_path}/{key_name}"
 
     auth = {
         "LIHIM_USER": username,

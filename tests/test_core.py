@@ -106,3 +106,24 @@ def test_pair_show_key_value():
     result = runner.invoke(app, ["pair","fancy"])
     assert result.exit_code == 0
     assert "(twice) fancy: wooooooohhhhh" in result.stdout
+
+def test_groupdel_yes_pass():
+    group_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
+    runner.invoke(app, ["groupadd", f"{group_name}"])
+
+    result = runner.invoke(
+        app, 
+        ["groupdel",f"{group_name}"],
+        input="y"
+    )
+    assert result.exit_code == 0
+    assert "Group deleted." in result.stdout
+
+def test_groupdel_no_pass():
+    result = runner.invoke(
+        app, 
+        ["groupdel","test_group"],
+        input="n"
+    )
+    assert result.exit_code == 0
+    assert "Cancelled" in result.stdout

@@ -1,5 +1,7 @@
 from lihim.main import app
 from typer.testing import CliRunner
+import string
+import random
 
 
 runner = CliRunner()
@@ -14,14 +16,16 @@ def test_check_pass():
     assert result.exit_code == 0
     assert "Current user:" in result.stdout
 
-# def test_useradd_pass():
-#     result = runner.invoke(
-#         app,
-#         ["useradd", "hyojoo"], 
-#         input="password\npassword\n/home/neeban/shipt\nhyojoo_key"
-#     )
-#     assert result.exit_code == 0
-#     assert "User hyojoo created." in result.stdout
+def test_useradd_pass():
+    username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
+
+    result = runner.invoke(
+        app,
+        ["useradd", f"{username}"], 
+        input=f"password\npassword\n/home/neeban/shipt\n{username}_key"
+    )
+    assert result.exit_code == 0
+    assert f"User {username} created." in result.stdout
 
 def test_useradd_fail_already_exists():
     result = runner.invoke(

@@ -1,3 +1,4 @@
+from peewee import Value
 from lihim.main import app
 from typer.testing import CliRunner
 import string
@@ -80,6 +81,28 @@ def test_groups():
     result = runner.invoke(app, ["groups"])
     assert result.exit_code == 0
 
-def test_group_list_of_pairs():
+def test_group_show_list_of_pairs():
     result = runner.invoke(app, ["group", "twice"])
     assert result.exit_code == 0
+
+def test_pairadd_pass():
+    key = ''.join(random.choices(string.ascii_uppercase, k=7))
+    Value = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
+    group = "twice"
+
+    result = runner.invoke(
+        app, 
+        ["pairadd"],
+        input=f"{key}\n{Value}\n{group}"
+    )
+    assert result.exit_code == 0
+    assert f"{key} added." in result.stdout
+
+def test_pairs():
+    result = runner.invoke(app, ["pairs"])
+    assert result.exit_code == 0
+
+def test_pair_show_key_value():
+    result = runner.invoke(app, ["pair","fancy"])
+    assert result.exit_code == 0
+    assert "(twice) fancy: wooooooohhhhh" in result.stdout

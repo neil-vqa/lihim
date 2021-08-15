@@ -127,3 +127,33 @@ def test_groupdel_no_pass():
     )
     assert result.exit_code == 0
     assert "Cancelled" in result.stdout
+
+def test_pairdel_yes_pass():
+    key = ''.join(random.choices(string.ascii_uppercase, k=7))
+    Value = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
+    group = "twice"
+
+    runner.invoke(
+        app, 
+        ["pairadd"],
+        input=f"{key}\n{Value}\n{group}"
+    )
+
+    result = runner.invoke(
+        app, 
+        ["pairdel",f"{key}",f"{group}"],
+        input="y"
+    )
+
+    assert result.exit_code == 0
+    assert "Key-value pair deleted." in result.stdout
+
+def test_pairdel_no_pass():
+    result = runner.invoke(
+        app, 
+        ["pairdel","test_key","test_group"],
+        input="n"
+    )
+
+    assert result.exit_code == 0
+    assert "Cancelled" in result.stdout

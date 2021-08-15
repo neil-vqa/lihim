@@ -17,7 +17,7 @@ def test_check_pass():
     assert "Current user:" in result.stdout
 
 def test_useradd_pass():
-    username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
+    username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
 
     result = runner.invoke(
         app,
@@ -62,3 +62,24 @@ def test_logout_pass():
     result = runner.invoke(app, ["logout"])
     assert result.exit_code == 0
     assert "Logged out. Bye!" in result.stdout
+
+def test_groupadd_pass():
+    runner.invoke(
+        app, 
+        ["login", "jihyo"],
+        input="love\n/home/neeban/shipt\njihyo_key"
+    )
+
+    group_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
+
+    result = runner.invoke(app, ["groupadd", f"{group_name}"])
+    assert result.exit_code == 0
+    assert f"{group_name} group added." in result.stdout
+
+def test_groups():
+    result = runner.invoke(app, ["groups"])
+    assert result.exit_code == 0
+
+def test_group_list_of_pairs():
+    result = runner.invoke(app, ["group", "twice"])
+    assert result.exit_code == 0

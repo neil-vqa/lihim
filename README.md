@@ -1,5 +1,5 @@
 # lihim
-**(WIP)** CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
+CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
 
 
 ## Overview
@@ -9,7 +9,9 @@
 
 
 ## Installation
-**Coming soon to PyPI**
+```cli
+pip install lihim
+```
 
 
 ## Get Started

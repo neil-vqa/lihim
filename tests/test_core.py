@@ -16,9 +16,24 @@ def test_initialize_db():
     assert "Database created." in result.stdout
 
 def test_check_pass():
+    runner.invoke(
+        app,
+        ["useradd", "hyojoo"], 
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
+    )
+
+    result = runner.invoke(
+        app, 
+        ["login", "hyojoo"],
+        input=f"password\n/{home}\nhyojoo_key_test"
+    )
+
     result = runner.invoke(app, ["check"])
+    helper.delete_user("hyojoo")
+    helper.clear_session()
+    
     assert result.exit_code == 0
-    assert "Current user:" in result.stdout
+    assert "Current user: hyojoo" in result.stdout
 
 def test_useradd_pass():
     result = runner.invoke(

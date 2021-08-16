@@ -1,12 +1,14 @@
 from lihim.main import app
 from typer.testing import CliRunner
 from .helper import Helper
+from pathlib import Path
 import string
 import random
 
 
 runner = CliRunner()
 helper = Helper()
+home = str(Path.home())
 
 def test_initialize_db():
     result = runner.invoke(app, ["initdb"])
@@ -22,7 +24,7 @@ def test_useradd_pass():
     result = runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
     helper.delete_user("hyojoo")
 
@@ -33,13 +35,13 @@ def test_useradd_fail_already_exists():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     result = runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
     helper.delete_user("hyojoo")
 
@@ -50,13 +52,13 @@ def test_useradd_fail_password_mismatch():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     result = runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="passworx\npasswory\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"passworx\npasswory\n/{home}\nhyojoo_key_test"
     )
     helper.delete_user("hyojoo")
 
@@ -67,7 +69,7 @@ def test_users():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     result = runner.invoke(app, ["users"])
@@ -80,13 +82,13 @@ def test_login_pass():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     result = runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
     helper.delete_user("hyojoo")
     helper.clear_session()
@@ -103,13 +105,13 @@ def test_groupadd_pass():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     group_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
@@ -125,13 +127,13 @@ def test_groups():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     group_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
@@ -149,13 +151,13 @@ def test_group_show_list_of_pairs():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     key = ''.join(random.choices(string.ascii_uppercase, k=7))
@@ -181,13 +183,13 @@ def test_pairadd_pass():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     key = ''.join(random.choices(string.ascii_uppercase, k=7))
@@ -211,13 +213,13 @@ def test_pairs():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     key = ''.join(random.choices(string.ascii_uppercase, k=7))
@@ -243,13 +245,13 @@ def test_pair_show_key_value():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     key = ''.join(random.choices(string.ascii_uppercase, k=7))
@@ -275,13 +277,13 @@ def test_groupdel_yes_pass():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     group_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
@@ -311,13 +313,13 @@ def test_pairdel_yes_pass():
     runner.invoke(
         app,
         ["useradd", "hyojoo"], 
-        input="password\npassword\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\npassword\n/{home}\nhyojoo_key_test"
     )
 
     runner.invoke(
         app, 
         ["login", "hyojoo"],
-        input="password\n/home/neeban/shipt\nhyojoo_key_test"
+        input=f"password\n/{home}\nhyojoo_key_test"
     )
 
     key = ''.join(random.choices(string.ascii_uppercase, k=7))

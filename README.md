@@ -1,5 +1,5 @@
 # lihim
-CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
+CLI tool for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
 
 
 ## Overview
@@ -16,7 +16,7 @@ pip install lihim
 
 ## Get Started
 1. Run `lihim initdb` to create the database and tables,
-2. Next, `lihim useradd [username]` to add your first user.
+2. Next, `lihim useradd [username]` to add your first user. You may read [Notes](#notes) section > Re: Users' key for prompts to expect.
 3. Then, `lihim login [username]` to login.
 4. Before you can add key-value pairs, you need a group. Run `lihim groupadd [group name]` to create a group.
 5. Now you can add a pair. `lihim pairadd` command will prompt interactively for key, value, and group.
@@ -33,7 +33,7 @@ pip install lihim
 | `logout` | Logout current user. |
 | `check` | Check who is currently logged in. |
 | `groups` | Display all the groups of current user. |
-| `group [group name]` | Display all the key-value pairs of the group. |
+| `group [group name]` | Display all the keys of key-value pairs in the group with name of ____. |
 | `groupadd [group name]` | Add new group with name of ____. |
 | `groupdel [group name]` | Delete group with name of ____ |
 | `pairs` | Display all the keys of available pairs of the current user. |
@@ -51,6 +51,21 @@ As per [PyNaCl's documentation](https://pynacl.readthedocs.io/en/latest/secret/#
 In lihim, this "key" is generated when *creating* a new user. The key's path (where to put it) and name (unique, only you knows) are all up to the user. When creating a user by `useradd [username]`, there will be prompts asking where and what to name the key. This is only for generating the key and the user **can (absolutely) rename and/or move** the key elsewhere anytime. The key's path and name are not stored in the database.
 
 When logging in, there will be prompts asking where your key is and what is its name. This happens every `login [username]`. You must give the current key path and key name if you ever moved and/or renamed the key.
+
+### Re: SQLite3
+The project currently uses sqlite. Postgresql option is on the roadmap. All values of key-value pairs are encrypted using PyNaCl's `SecretBox`.
+
+
+## Development
+The project uses poetry to package and manage dependencies:
+```cli
+poetry install
+```
+
+Run tests:
+```cli
+poetry pytest
+```
 
 
 ## License

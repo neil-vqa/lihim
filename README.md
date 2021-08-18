@@ -1,5 +1,5 @@
 # lihim
-CLI for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
+CLI tool for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
 
 
 ## Overview
@@ -16,7 +16,7 @@ pip install lihim
 
 ## Get Started
 1. Run `lihim initdb` to create the database and tables,
-2. Next, `lihim useradd [username]` to add your first user. You may read [Notes](#notes) section > Re: Users' key for propmpts to expect.
+2. Next, `lihim useradd [username]` to add your first user. You may read [Notes](#notes) section > Re: Users' key for prompts to expect.
 3. Then, `lihim login [username]` to login.
 4. Before you can add key-value pairs, you need a group. Run `lihim groupadd [group name]` to create a group.
 5. Now you can add a pair. `lihim pairadd` command will prompt interactively for key, value, and group.
@@ -54,6 +54,18 @@ When logging in, there will be prompts asking where your key is and what is its 
 
 ### Re: SQLite3
 The project currently uses sqlite. Postgresql option is on the roadmap. All values of key-value pairs are encrypted using PyNaCl's `SecretBox`.
+
+
+## Development
+The project uses poetry to package and manage dependencies:
+```cli
+poetry install
+```
+
+Run tests:
+```cli
+poetry pytest
+```
 
 
 ## License

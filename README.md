@@ -16,7 +16,7 @@ pip install lihim
 
 ## Get Started
 1. Run `lihim initdb` to create the database and tables,
-2. Next, `lihim useradd [username]` to add your first user.
+2. Next, `lihim useradd [username]` to add your first user. You may read [Notes](#notes) section > Re: Users' key for propmpts to expect.
 3. Then, `lihim login [username]` to login.
 4. Before you can add key-value pairs, you need a group. Run `lihim groupadd [group name]` to create a group.
 5. Now you can add a pair. `lihim pairadd` command will prompt interactively for key, value, and group.
@@ -33,7 +33,7 @@ pip install lihim
 | `logout` | Logout current user. |
 | `check` | Check who is currently logged in. |
 | `groups` | Display all the groups of current user. |
-| `group [group name]` | Display all the key-value pairs of the group. |
+| `group [group name]` | Display all the keys of key-value pairs in the group with name of ____. |
 | `groupadd [group name]` | Add new group with name of ____. |
 | `groupdel [group name]` | Delete group with name of ____ |
 | `pairs` | Display all the keys of available pairs of the current user. |

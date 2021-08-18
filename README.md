@@ -52,6 +52,9 @@ In lihim, this "key" is generated when *creating* a new user. The key's path (wh
 
 When logging in, there will be prompts asking where your key is and what is its name. This happens every `login [username]`. You must give the current key path and key name if you ever moved and/or renamed the key.
 
+### Re: SQLite3
+The project currently uses sqlite. Postgresql option is on the roadmap. All values of key-value pairs are encrypted using PyNaCl's `SecretBox`.
+
 
 ## License
 MIT License

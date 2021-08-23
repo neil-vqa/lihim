@@ -4,7 +4,8 @@ import nacl.secret
 import nacl.utils
 import errno
 import os
-from typing import Optional
+from typing import overload, Tuple, List
+from peewee import ModelSelect
 from .config import ConfigPath
 from .models import User, Group, Pair
 from pathlib import Path
@@ -16,7 +17,13 @@ conf = ConfigPath()
 CLI commands associated with users use these functions.
 """
 
-def use_key(key: str, encrypt_text: Optional[str] = None, decrypt_text: Optional[bytes] = None):
+@overload
+def use_key(key: str, encrypt_text: str) -> nacl.utils.EncryptedMessage: ...
+
+@overload
+def use_key(key: str, decrypt_text: bytes) -> str: ...
+
+def use_key(key, encrypt_text = None, decrypt_text = None):
     with open(key, "rb") as f:
         key_bin = f.read()
         box = nacl.secret.SecretBox(key_bin)
@@ -30,7 +37,7 @@ def use_key(key: str, encrypt_text: Optional[str] = None, decrypt_text: Optional
         decoded_text = plaintext.decode('UTF-8')
         return decoded_text
 
-def load_key():
+def load_key() -> str:
     try:
         with open(conf.session_path, "r") as f:
             current_user = json.load(f)
@@ -40,7 +47,7 @@ def load_key():
     except Exception as e:
         raise e
     
-def check_key_exists(key):
+def check_key_exists(key: str) -> None:
     try:
         key_file = Path(key)
         if not key_file.exists():
@@ -62,7 +69,7 @@ def create_user(username: str, password: str, key: str) -> None:
     except Exception as e:
         raise e
 
-def check_users():
+def check_users() -> ModelSelect:
     users = User.select()
     return users
 
@@ -70,7 +77,7 @@ def check_users():
 Functions associated with managing the session.
 """
     
-def enter_user(username: str, password: str, key_path: str, key_name: str):
+def enter_user(username: str, password: str, key_path: str, key_name: str) -> None:
     """
     Writes the entered username and password to session.json when logging in.
     """
@@ -92,7 +99,7 @@ def enter_user(username: str, password: str, key_path: str, key_name: str):
     except Exception as e:
         raise e
 
-def load_session_json():
+def load_session_json() -> Tuple[str, str]:
     try:
         with open(conf.session_path, "r") as f:
             current_user = json.load(f)
@@ -104,7 +111,7 @@ def load_session_json():
     except Exception as e:
         raise e
 
-def get_user(username):
+def get_user(username) -> User:
     """
     Gets the User instance for current_user variable.
     """
@@ -114,7 +121,7 @@ def get_user(username):
     except:
         raise ValueError("User does not exist. Unauthenticated.")
 
-def check_password(current_user, password):
+def check_password(current_user, password) -> None:
     """
     Verifies the password in session.json against
     the hashed password in the database.
@@ -127,7 +134,7 @@ def check_password(current_user, password):
     except Exception as e:
         raise e
 
-def allow_user():
+def allow_user() -> Tuple[bool, User]:
     """
     Check if authenticated.
     """
@@ -139,7 +146,7 @@ def allow_user():
     except Exception as e:
         raise e
 
-def clear_user():
+def clear_user() -> None:
     """
     Clears username and password in session.json.
     """
@@ -159,7 +166,7 @@ CLI commands associated with groups and pairs
 use these functions.
 """
 
-def create_group(name: str, current_user: User):
+def create_group(name: str, current_user: User) -> None:
     try:
         new_group = Group(
             name=name,
@@ -169,18 +176,18 @@ def create_group(name: str, current_user: User):
     except Exception as e:
         raise e
 
-def check_groups(current_user: User):
+def check_groups(current_user: User) -> ModelSelect:
     groups = current_user.groups
     return groups
 
-def check_group_pairs(name: str, current_user: User):
+def check_group_pairs(name: str, current_user: User) -> ModelSelect:
     try:
         group = Group.get(Group.user==current_user, Group.name==name)
         return group.pairs
     except Group.DoesNotExist:
         raise ValueError("Group does not exist.")
 
-def create_pair(key: str, value: str, group: str, current_user: User):
+def create_pair(key: str, value: str, group: str, current_user: User) -> None:
     try:
         group_to_add = Group.get(Group.user==current_user, Group.name==group)
         key_file = load_key()
@@ -192,20 +199,22 @@ def create_pair(key: str, value: str, group: str, current_user: User):
             user=current_user
         )
         new_pair.save()
+    except Group.DoesNotExist:
+        raise ValueError("Group does not exist.")
     except Exception as e:
         raise e
 
-def check_pairs(current_user: User):
+def check_pairs(current_user: User) -> ModelSelect:
     pairs = current_user.pairs
     return pairs
 
-def check_key_value(key: str, current_user: User):
+def check_key_value(key: str, current_user: User) -> List[Tuple[str, str, str]]:
     key_file = load_key()
     pairs = current_user.pairs
     key_val = [(pair.key_string, use_key(key_file, decrypt_text=pair.value_string), pair.group.name) for pair in pairs if pair.key_string == key]
     return key_val
     
-def load_pair_in_group(group_name: str, key: str, current_user: User):
+def load_pair_in_group(group_name: str, key: str, current_user: User) -> Pair:
     try:
         pair_in_group = Group.get(Group.user==current_user, Group.name==group_name)
         pair = Pair.get(Pair.user==current_user, Pair.group==pair_in_group, Pair.key_string==key)
@@ -215,7 +224,7 @@ def load_pair_in_group(group_name: str, key: str, current_user: User):
     except Pair.DoesNotExist:
         raise ValueError("Pair does not exist.")
 
-def delete_group(name: str, current_user: User):
+def delete_group(name: str, current_user: User) -> None:
     try:
         group = Group.get(Group.user==current_user, Group.name==name)
         group.delete_instance(recursive=True)
@@ -224,7 +233,7 @@ def delete_group(name: str, current_user: User):
     except Exception as e:
         raise e
 
-def delete_pair(pair: Pair, current_user: User):
+def delete_pair(pair: Pair, current_user: User) -> None:
     try:
         pair.delete_instance()
     except Exception as e:

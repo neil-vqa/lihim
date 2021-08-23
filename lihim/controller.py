@@ -192,6 +192,8 @@ def create_pair(key: str, value: str, group: str, current_user: User):
             user=current_user
         )
         new_pair.save()
+    except Group.DoesNotExist:
+        raise ValueError("Group does not exist.")
     except Exception as e:
         raise e
 

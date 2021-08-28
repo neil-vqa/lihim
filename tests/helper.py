@@ -17,17 +17,13 @@ class Helper:
         of the user are also deleted.
         """
         try:
-            user = User.get(User.username==username)
+            user = User.get(User.username == username)
             user.delete_instance(recursive=True)
         except Exception as e:
             raise e
 
     def clear_session(self):
-        auth = {
-            "LIHIM_USER": "",
-            "LIHIM_PASSWORD": "",
-            "LIHIM_KEY": ""
-        }
+        auth = {"LIHIM_USER": "", "LIHIM_PASSWORD": "", "LIHIM_KEY": ""}
         auth_dump = json.dumps(auth, indent=2)
 
         with open(conf.session_path, "w") as f:

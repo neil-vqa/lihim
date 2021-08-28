@@ -1,9 +1,5 @@
-from typing import List
-import typing
-from click.termui import prompt
 import typer
-from .models import create_db, create_key
-from .controller import *
+from . import models, controller
 
 
 app = typer.Typer()
@@ -14,7 +10,7 @@ def initdb():
     """
     One-off command to create the database and tables.
     """
-    create_db()
+    models.create_db()
     typer.echo("Database created.")
 
 
@@ -24,7 +20,7 @@ def check():
     Check who is currently logged in.
     """
     try:
-        user = load_session_json()
+        user = controller.load_session_json()
         typer.echo(f"Current user: {user[0]}")
     except:
         typer.echo("Please login.")
@@ -46,8 +42,8 @@ def useradd(username: str):
 
     if passwordx == passwordy:
         try:
-            key = create_key(key_path, key_name, username)
-            create_user(username, passwordx, key)
+            key = models.create_key(key_path, key_name, username)
+            controller.create_user(username, passwordx, key)
             typer.echo(f"User {username} created.")
         except Exception as e:
             typer.echo(e)
@@ -60,7 +56,7 @@ def users():
     """
     Lists all the users.
     """
-    users_list = check_users()
+    users_list = controller.check_users()
     for user in users_list:
         typer.echo(user.username)
 
@@ -76,7 +72,7 @@ def login(
     'login [username]' -> Login as a certain user.
     """
     try:
-        enter_user(username, password, key_path, key_name)
+        controller.enter_user(username, password, key_path, key_name)
         typer.echo(f"Logged in.")
     except Exception as e:
         typer.echo(e)
@@ -87,7 +83,7 @@ def logout():
     """
     Logout current user.
     """
-    clear_user()
+    controller.clear_user()
     typer.echo(f"Logged out. Bye!")
 
 
@@ -97,9 +93,9 @@ def groupadd(name: str):
     'groupadd [group name]' -> Add a new group.
     """
     try:
-        response = allow_user()
+        response = controller.allow_user()
         current_user = response[1]
-        create_group(name, current_user)
+        controller.create_group(name, current_user)
         typer.echo(f"{name} group added.")
     except Exception as e:
         typer.echo(e)
@@ -111,9 +107,9 @@ def groups():
     Lists all the groups of current user.
     """
     try:
-        response = allow_user()
+        response = controller.allow_user()
         current_user = response[1]
-        groups_list = check_groups(current_user)
+        groups_list = controller.check_groups(current_user)
         for group in groups_list:
             typer.echo(group.name)
     except Exception as e:
@@ -126,9 +122,9 @@ def group(name: str):
     'group [group name]' -> Lists all the keys of the group.
     """
     try:
-        response = allow_user()
+        response = controller.allow_user()
         current_user = response[1]
-        pairs_list = check_group_pairs(name, current_user)
+        pairs_list = controller.check_group_pairs(name, current_user)
         for pair in pairs_list:
             typer.echo(pair.key_string)
     except Exception as e:
@@ -145,9 +141,9 @@ def pairadd():
     group = typer.prompt("Add to what group?")
 
     try:
-        response = allow_user()
+        response = controller.allow_user()
         current_user = response[1]
-        create_pair(key, value, group, current_user)
+        controller.create_pair(key, value, group, current_user)
         typer.echo(f"{key} added.")
     except Exception as e:
         typer.echo(e)
@@ -159,9 +155,9 @@ def pairs():
     Lists all the keys of available pairs of current user.
     """
     try:
-        response = allow_user()
+        response = controller.allow_user()
         current_user = response[1]
-        pairs_list = check_pairs(current_user)
+        pairs_list = controller.check_pairs(current_user)
         for pair in pairs_list:
             typer.echo(pair.key_string)
     except Exception as e:
@@ -174,9 +170,9 @@ def pair(key: str):
     'pair [key]' -> Display the key-value pair.
     """
     try:
-        response = allow_user()
+        response = controller.allow_user()
         current_user = response[1]
-        key_val_list = check_key_value(key, current_user)
+        key_val_list = controller.check_key_value(key, current_user)
         for pair in key_val_list:
             typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
     except Exception as e:
@@ -196,9 +192,9 @@ def groupdel(
     """
     if confirm:
         try:
-            response = allow_user()
+            response = controller.allow_user()
             current_user = response[1]
-            delete_group(name, current_user)
+            controller.delete_group(name, current_user)
             typer.echo("Group deleted.")
         except Exception as e:
             typer.echo(e)
@@ -219,10 +215,10 @@ def pairdel(
     """
     if confirm:
         try:
-            response = allow_user()
+            response = controller.allow_user()
             current_user = response[1]
-            pair = load_pair_in_group(group, key, current_user)
-            delete_pair(pair, current_user)
+            pair = controller.load_pair_in_group(group, key, current_user)
+            controller.delete_pair(pair, current_user)
             typer.echo("Key-value pair deleted.")
         except Exception as e:
             typer.echo(e)

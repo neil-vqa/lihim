@@ -1,6 +1,3 @@
-from typing import List
-import typing
-from click.termui import prompt
 import typer
 from .models import create_db, create_key
 from .controller import *

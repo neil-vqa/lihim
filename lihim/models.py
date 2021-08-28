@@ -1,4 +1,3 @@
-from re import U
 import sqlite3
 from peewee import SqliteDatabase, Model, CharField, ForeignKeyField, BlobField
 from .config import ConfigPath

@@ -10,23 +10,28 @@ conf = ConfigPath()
 
 database = SqliteDatabase(conf.db_path)
 
+
 class BaseModel(Model):
     class Meta:
         database = database
+
 
 class User(BaseModel):
     username = CharField(unique=True)
     password = CharField()
 
+
 class Group(BaseModel):
     name = CharField()
-    user = ForeignKeyField(User, backref='groups')
+    user = ForeignKeyField(User, backref="groups")
+
 
 class Pair(BaseModel):
     key_string = CharField()
     value_string = BlobField()
-    group = ForeignKeyField(Group, backref='pairs')
-    user = ForeignKeyField(User, backref='pairs')
+    group = ForeignKeyField(Group, backref="pairs")
+    user = ForeignKeyField(User, backref="pairs")
+
 
 def create_db():
     conf.create_config()
@@ -36,14 +41,16 @@ def create_db():
     with database:
         database.create_tables([User, Group, Pair])
 
+
 def check_user_exists(username: str):
     try:
-        User.get(User.username==username)
+        User.get(User.username == username)
         return True
     except User.DoesNotExist:
         return False
     except Exception as e:
         raise e
+
 
 def create_key(key_path: str, key_name: str, username: str):
     try:

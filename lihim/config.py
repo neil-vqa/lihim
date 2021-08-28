@@ -9,4 +9,4 @@ class ConfigPath:
     session_path = f"{config_path}/session.json"
 
     def create_config(self):
-        os.makedirs(self.config_path, exist_ok = True)
+        os.makedirs(self.config_path, exist_ok=True)

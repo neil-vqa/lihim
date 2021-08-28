@@ -8,6 +8,7 @@ from .controller import *
 
 app = typer.Typer()
 
+
 @app.command()
 def initdb():
     """
@@ -15,6 +16,7 @@ def initdb():
     """
     create_db()
     typer.echo("Database created.")
+
 
 @app.command()
 def check():
@@ -26,6 +28,7 @@ def check():
         typer.echo(f"Current user: {user[0]}")
     except:
         typer.echo("Please login.")
+
 
 @app.command()
 def useradd(username: str):
@@ -51,6 +54,7 @@ def useradd(username: str):
     else:
         typer.echo("Password did not match. Please try again.")
 
+
 @app.command()
 def users():
     """
@@ -60,18 +64,13 @@ def users():
     for user in users_list:
         typer.echo(user.username)
 
+
 @app.command()
 def login(
-    username: str, 
-    password: str = typer.Option(
-        ..., prompt=True, hide_input=True
-    ),
-    key_path: str = typer.Option(
-        ..., prompt=True
-    ),
-    key_name: str = typer.Option(
-        ..., prompt=True
-    )
+    username: str,
+    password: str = typer.Option(..., prompt=True, hide_input=True),
+    key_path: str = typer.Option(..., prompt=True),
+    key_name: str = typer.Option(..., prompt=True),
 ):
     """
     'login [username]' -> Login as a certain user.
@@ -82,6 +81,7 @@ def login(
     except Exception as e:
         typer.echo(e)
 
+
 @app.command()
 def logout():
     """
@@ -89,6 +89,7 @@ def logout():
     """
     clear_user()
     typer.echo(f"Logged out. Bye!")
+
 
 @app.command()
 def groupadd(name: str):
@@ -102,6 +103,7 @@ def groupadd(name: str):
         typer.echo(f"{name} group added.")
     except Exception as e:
         typer.echo(e)
+
 
 @app.command()
 def groups():
@@ -132,6 +134,7 @@ def group(name: str):
     except Exception as e:
         typer.echo(e)
 
+
 @app.command()
 def pairadd():
     """
@@ -149,6 +152,7 @@ def pairadd():
     except Exception as e:
         typer.echo(e)
 
+
 @app.command()
 def pairs():
     """
@@ -162,6 +166,7 @@ def pairs():
             typer.echo(pair.key_string)
     except Exception as e:
         typer.echo(e)
+
 
 @app.command()
 def pair(key: str):
@@ -177,13 +182,14 @@ def pair(key: str):
     except Exception as e:
         typer.echo(e)
 
+
 @app.command()
 def groupdel(
     name: str,
     confirm: bool = typer.Option(
         ...,
-        prompt="DANGER: Are you sure you want to delete this group? (Pairs within this group will also be deleted.)"
-    )
+        prompt="DANGER: Are you sure you want to delete this group? (Pairs within this group will also be deleted.)",
+    ),
 ):
     """
     'groupdel [group name]' -> Delete group.
@@ -192,21 +198,21 @@ def groupdel(
         try:
             response = allow_user()
             current_user = response[1]
-            del_response = delete_group(name, current_user)
+            delete_group(name, current_user)
             typer.echo("Group deleted.")
         except Exception as e:
             typer.echo(e)
     else:
         typer.echo("Cancelled.")
 
+
 @app.command()
 def pairdel(
-    key: str, 
-    group: str, 
+    key: str,
+    group: str,
     confirm: bool = typer.Option(
-        ...,
-        prompt="DANGER: Are you sure you want to delete this key-val pair?"
-    )
+        ..., prompt="DANGER: Are you sure you want to delete this key-val pair?"
+    ),
 ):
     """
     'pairdel [key] [group name]' -> Delete specified key.
@@ -216,13 +222,12 @@ def pairdel(
             response = allow_user()
             current_user = response[1]
             pair = load_pair_in_group(group, key, current_user)
-            del_response = delete_pair(pair, current_user)
+            delete_pair(pair, current_user)
             typer.echo("Key-value pair deleted.")
         except Exception as e:
             typer.echo(e)
     else:
         typer.echo("Cancelled.")
-
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 # lihim
-CLI tool for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A note-taking CLI tool glorified by added security and complexity for listing key-value pairs."*
+CLI tool for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A glorified note-taking CLI tool  with added security and complexity for listing key-value pairs."*
 
 
 ## Overview
@@ -48,7 +48,7 @@ As per [PyNaCl's documentation](https://pynacl.readthedocs.io/en/latest/secret/#
 
 > The 32 bytes key given to `SecretBox` must be kept secret. It is the combination to your “safe” and anyone with this key will be able to decrypt the data, or encrypt new data.
 
-In lihim, this "key" is generated when *creating* a new user. The key's path (where to put it) and name (unique, only you knows) are all up to the user. When creating a user by `useradd [username]`, there will be prompts asking where and what to name the key. This is only for generating the key and the user **can (absolutely) rename and/or move** the key elsewhere anytime. The key's path and name are not stored in the database.
+In **Lihim**, this "key" is generated when *creating* a new user. The key's path (where to put it) and name (unique, only you knows) are all up to the user. When creating a user by `useradd [username]`, there will be prompts asking where and what to name the key. This is only for generating the key and the user **can (absolutely) rename and/or move** the key elsewhere anytime. The key's path and name are not stored in the database.
 
 When logging in, there will be prompts asking where your key is and what is its name. This happens every `login [username]`. You must give the current key path and key name if you ever moved and/or renamed the key.
 
@@ -57,14 +57,14 @@ The project currently uses sqlite. Postgresql option is on the roadmap. All valu
 
 
 ## Development
-The project uses poetry to package and manage dependencies:
+The project uses Poetry to package and manage dependencies:
 ```cli
 poetry install
 ```
 
 Run tests:
 ```cli
-poetry pytest
+pytest
 ```
 
 

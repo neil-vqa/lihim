@@ -1,4 +1,10 @@
-# lihim
+<p align="center">
+    <a href="https://pypi.org/project/lihim/">
+        <img width="1200" src="https://raw.githubusercontent.com/neil-vqa/lihim/main/lihim-logo.png">
+    </a>
+</p>
+
+
 CLI tool for managing secret keys, tokens, sensitive and/or public key-value pairs. AKA *"A glorified note-taking CLI tool  with added security and complexity for listing key-value pairs."*
 
 

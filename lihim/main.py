@@ -143,7 +143,8 @@ def pairadd():
     try:
         response = controller.allow_user()
         current_user = response[1]
-        controller.create_pair(key, value, group, current_user)
+        key_file = controller.load_key()
+        controller.create_pair(key, value, group, current_user, key_file)
         typer.echo(f"{key} added.")
     except Exception as e:
         typer.echo(e)
@@ -172,7 +173,8 @@ def pair(key: str):
     try:
         response = controller.allow_user()
         current_user = response[1]
-        key_val_list = controller.check_key_value(key, current_user)
+        key_file = controller.load_key()
+        key_val_list = controller.check_key_value(key, current_user, key_file)
         for pair in key_val_list:
             typer.echo(f"({pair[2]}) {pair[0]}: {pair[1]}")
     except Exception as e:

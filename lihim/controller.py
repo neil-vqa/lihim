@@ -195,10 +195,11 @@ def check_group_pairs(name: str, current_user: User) -> ModelSelect:
         raise ValueError("Group does not exist.")
 
 
-def create_pair(key: str, value: str, group: str, current_user: User) -> None:
+def create_pair(
+    key: str, value: str, group: str, current_user: User, key_file: str
+) -> None:
     try:
         group_to_add = Group.get(Group.user == current_user, Group.name == group)
-        key_file = load_key()
         encrypted_value = use_key(key_file, encrypt_text=value)
         new_pair = Pair(
             key_string=key,
@@ -218,8 +219,9 @@ def check_pairs(current_user: User) -> ModelSelect:
     return pairs
 
 
-def check_key_value(key: str, current_user: User) -> List[Tuple[str, str, str]]:
-    key_file = load_key()
+def check_key_value(
+    key: str, current_user: User, key_file: str
+) -> List[Tuple[str, str, str]]:
     pairs = current_user.pairs
     key_val = [
         (
